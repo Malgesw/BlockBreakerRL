@@ -66,7 +66,7 @@ def load_model(args, env):
         model = DQN.load("./models/{}".format(args.algo), env=env)
     elif args.algo == "sac":
         model = SAC.load(
-            "./model_checkpoints/rl_model_3000000_steps.zip", env=env)
+            "./model_checkpoints/rl_model_5000000_steps.zip", env=env)
     else:
         raise ValueError(f"RL Algo not supported: {args.algo}")
     return model, env

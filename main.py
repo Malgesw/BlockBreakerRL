@@ -52,9 +52,6 @@ def check_block_collision(ball, blockGrid, sign_x, sign_y, score):
     j = max(0, min(j, blockGrid.columns - 1))
 
     # Decide the order in which to check rows:
-    # If the ball is moving upward (sign_y < 0), we want to hit the lowest block first,
-    # so we iterate from bottom (last row) upward.
-    # (For a downward-moving ball you could reverse the order.)
     row_range = (
         range(blockGrid.rows - 1, -1, -1) if sign_y < 0 else range(blockGrid.rows)
     )
@@ -141,7 +138,7 @@ def check_collisions(
         ball.center_y = platform.top - ball.r
         center_distance = (ball.center_x - platform.centerx) / platform.width
         speed_x = abs(center_distance) * 8
-        # keep overall speed constant
+        # Keep overall speed constant
         speed_y = math.sqrt(18 - speed_x * speed_x)
         sign_x = 1 if center_distance >= 0 else -1
         sign_y = -sign_y
@@ -202,8 +199,7 @@ def main():
     font = pygame.font.Font("./ARCADECLASSIC.TTF", 25)
 
     # Game Objects
-    blockGrid = BlockGrid(7, 10, SCREEN_WIDTH,
-                          SCREEN_HEIGHT // 2, padding=5, offset=70)
+    blockGrid = BlockGrid(7, 10, SCREEN_WIDTH, SCREEN_HEIGHT // 2, padding=5, offset=70)
     platform = pygame.Rect(240, 550, 120, 30)
     ball = Ball(platform.centerx, platform.centery - 30, 15, (255, 255, 255))
     restartButton_center_x = SCREEN_WIDTH // 2
@@ -325,10 +321,8 @@ def main():
 
             # Move ball if the game has started
             if started_moving:
-                ball.center_x += sign_x * speed_x * \
-                    dt * 60 * (completions * 0.5 + 1)
-                ball.center_y += sign_y * speed_y * \
-                    dt * 60 * (completions * 0.5 + 1)
+                ball.center_x += sign_x * speed_x * dt * 60 * (completions * 0.5 + 1)
+                ball.center_y += sign_y * speed_y * dt * 60 * (completions * 0.5 + 1)
 
             # Check if the current level is cleared
             if score == (completions + 1) * blockGrid.rows * blockGrid.columns:
@@ -352,8 +346,7 @@ def main():
             else:
                 t_surface = font.render("You Win!", True, (255, 255, 255))
 
-            t_rect = t_surface.get_rect(
-                center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
+            t_rect = t_surface.get_rect(center=(SCREEN_WIDTH // 2, SCREEN_HEIGHT // 2))
             screen.blit(text_surface, text_rect)
             screen.blit(text_surface_l, text_rect_l)
 
