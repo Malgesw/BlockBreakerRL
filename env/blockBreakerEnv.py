@@ -45,12 +45,10 @@ class BlockBreakerEnv(gym.Env):
         )
         self.platform = pygame.Rect(240, 550, 120, 30)
         self.ball = self.Ball(
-            self.platform.centerx, self.platform.centery -
-            30, 15, (255, 255, 255)
+            self.platform.centerx, self.platform.centery - 30, 15, (255, 255, 255)
         )
 
-        self.action_space = spaces.Box(
-            low=-5.0, high=5.0, shape=(1,), dtype=np.float32)
+        self.action_space = spaces.Box(low=-5.0, high=5.0, shape=(1,), dtype=np.float32)
         # platform pos x, ball pos x, ball pos y, ball speed x, ball speed y, blocks validity matrix
         self.observation_space = spaces.Dict(
             {
@@ -59,8 +57,7 @@ class BlockBreakerEnv(gym.Env):
                 ),
                 "ball": spaces.Box(
                     low=np.array([0, 0, -5, -5]),
-                    high=np.array(
-                        [self.SCREEN_WIDTH, self.SCREEN_HEIGHT, 5, 5]),
+                    high=np.array([self.SCREEN_WIDTH, self.SCREEN_HEIGHT, 5, 5]),
                     shape=(4,),
                     dtype=np.float32,
                 ),
@@ -88,8 +85,7 @@ class BlockBreakerEnv(gym.Env):
         pygame.init()
         pygame.font.init()
 
-        self.screen = pygame.display.set_mode(
-            (self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
+        self.screen = pygame.display.set_mode((self.SCREEN_WIDTH, self.SCREEN_HEIGHT))
         pygame.display.set_caption("BlockBreakerRL")
         self.font = pygame.font.Font("ARCADECLASSIC.TTF", 30)
 
@@ -140,15 +136,11 @@ class BlockBreakerEnv(gym.Env):
 
         # Determine which column the ball is over
         j = int(
-            self.ball.center_x // (self.blockGrid.block_width +
-                                   self.blockGrid.padding)
+            self.ball.center_x // (self.blockGrid.block_width + self.blockGrid.padding)
         )
         j = max(0, min(j, self.blockGrid.columns - 1))
 
-        # Decide the order in which to check rows:
-        # If the ball is moving upward (sign_y < 0), we want to hit the lowest block first,
-        # so we iterate from bottom (last row) upward.
-        # (For a downward-moving ball you could reverse the order.)
+        # Decide the order in which to check rows
         row_range = (
             range(self.blockGrid.rows - 1, -1, -1)
             if self.sign_y < 0
@@ -218,7 +210,7 @@ class BlockBreakerEnv(gym.Env):
                 self.ball.center_x - self.platform.centerx
             ) / self.platform.width
             self.speed_x = abs(center_distance) * 8
-            # keep overall speed constant
+            # Keep overall speed constant
             self.speed_y = math.sqrt(18 - self.speed_x * self.speed_x)
             self.sign_x = 1 if center_distance >= 0 else -1
             self.sign_y = -self.sign_y
@@ -241,8 +233,7 @@ class BlockBreakerEnv(gym.Env):
 
     def reset_positions(self):
         self.platform.topleft = (240, 550)
-        self.ball.center_x = np.random.uniform(
-            self.platform.left, self.platform.right)
+        self.ball.center_x = np.random.uniform(self.platform.left, self.platform.right)
         self.ball.center_y = self.platform.centery - 30
         self.sign_x = 1
         self.sign_y = -1
@@ -385,8 +376,7 @@ class BlockBreakerEnv(gym.Env):
             self.offset = offset
             self.width = width
             self.height = height
-            self.valid = [[True for i in range(
-                self.columns)] for j in range(self.rows)]
+            self.valid = [[True for i in range(self.columns)] for j in range(self.rows)]
 
             for i in range(rows):
                 row_blocks = []
@@ -431,8 +421,7 @@ class BlockBreakerEnv(gym.Env):
 
         def draw(self, screen: pygame.Surface):
             pygame.draw.circle(
-                screen, self.color, center=(
-                    self.center_x, self.center_y), radius=self.r
+                screen, self.color, center=(self.center_x, self.center_y), radius=self.r
             )
 
 
@@ -456,5 +445,5 @@ class RendererCallback(BaseCallback):
 gym.envs.registration.register(
     id="BlockBreaker-v0",
     entry_point=BlockBreakerEnv,
-    max_episode_steps=70000,  # 3 * 500 timesteps max
+    max_episode_steps=70000,
 )
